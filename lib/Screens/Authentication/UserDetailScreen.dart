@@ -14,6 +14,7 @@ class UserDetailScreen extends StatefulWidget {
 }
 
 class _UserDetailScreenState extends State<UserDetailScreen> {
+  bool isLoading = false;
   String userFirstName = '-';
   String userLastName = '-';
   String userEmail = '-';
@@ -34,6 +35,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   }
 
   Future<void> setUserName() async {
+    setState(() {
+      isLoading = true;
+    });
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(currentFirebaseUser!.uid)
@@ -44,6 +48,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       'userId': currentFirebaseUser!.uid,
       'profilePic': '',
       'email': userEmail,
+    });
+    setState(() {
+      isLoading = false;
     });
     Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
   }
@@ -136,10 +143,12 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           SizedBox(
             height: 1.h,
           ),
-          BlueBtn(
-            label: 'Proceed',
-            ontap: setUserName,
-          )
+          isLoading
+              ? const CircularProgressIndicator()
+              : BlueBtn(
+                  label: 'Proceed',
+                  ontap: setUserName,
+                )
         ]),
       ),
     );

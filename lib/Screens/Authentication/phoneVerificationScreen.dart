@@ -12,7 +12,12 @@ class PhoneVerificationScreen extends StatefulWidget {
 }
 
 class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
+  bool isLoading = false;
+
   Future<void> verifyPhoneNumber(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
     print('+91$phoneNumber');
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+91$phoneNumber',
@@ -46,6 +51,9 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
         // });
       },
     );
+    setState(() {
+      isLoading = false;
+    });
     // Navigator.of(context).pushNamed(OtpScreen.routeName);
   }
 
@@ -109,12 +117,14 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
             SizedBox(
               height: 2.0.h,
             ),
-            BlueBtn(
-              label: "Generate OTP",
-              ontap: () {
-                phoneNumber == '' ? null : verifyPhoneNumber(context);
-              },
-            ),
+            isLoading
+                ? const CircularProgressIndicator()
+                : BlueBtn(
+                    label: "Generate OTP",
+                    ontap: () {
+                      phoneNumber == '' ? null : verifyPhoneNumber(context);
+                    },
+                  ),
           ],
         ),
       ),

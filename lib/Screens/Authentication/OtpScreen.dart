@@ -15,6 +15,7 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  bool isLoading = false;
   String otp = '';
   var phoneNumber;
   var check = false;
@@ -37,6 +38,9 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Future<void> signIn(String otp) async {
+    setState(() {
+      isLoading = true;
+    });
     final userData = await FirebaseAuth.instance
         .signInWithCredential(PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -54,6 +58,9 @@ class _OtpScreenState extends State<OtpScreen> {
     } else {
       Navigator.of(context).pushNamed(HomeScreen.routeName);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -95,12 +102,14 @@ class _OtpScreenState extends State<OtpScreen> {
           SizedBox(
             height: 2.0.h,
           ),
-          BlueBtn(
-            label: "Verify OTP",
-            ontap: () {
-              signIn(otp);
-            },
-          ),
+          isLoading
+              ? const CircularProgressIndicator()
+              : BlueBtn(
+                  label: "Verify OTP",
+                  ontap: () {
+                    signIn(otp);
+                  },
+                ),
         ]),
       )),
     );

@@ -245,8 +245,7 @@ class _videoItemChatState extends State<videoItemChat> {
   void initState() {
     print(widget.videoLink);
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(
-        'https://firebasestorage.googleapis.com/v0/b/chat-app-assignment-98835.appspot.com/o/storage%2FKI7L99e4d6S7w475M5T4UCeZQtV21000050164.mp4jpg?alt=media&token=727c6972-ecf0-4839-aafe-94349f58432c'));
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoLink));
 
     _controller.addListener(() {
       setState(() {});
